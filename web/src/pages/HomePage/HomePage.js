@@ -89,8 +89,8 @@ const HomePage = () => {
       <div className="m-w-sm shadow-lg text-center p-5 mx-auto">
         <h2 className="text-5xl">Philadelphia OEO Database</h2>
         <p className="text-sm">
-          Search Certified Minority, Women, Disabled and Disadvantages Business
-          Enterprises around Philadelphia
+          Search Certified Minority, Women, Disabled and Disadvantaged Owned
+          Business Enterprises around Philadelphia
         </p>
       </div>
       <div className="justify-center text-center mt-3">

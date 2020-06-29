@@ -64,7 +64,7 @@ const BasicLayout = ({ children }) => {
                 className="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-white mr-4"
                 rel="noreferrer"
                 target="_blank"
-                href="https://mintbean.io/mb-event/bd7a7182-3898-46ad-b42b-336198f41443"
+                href="https://www.mintbean.io/mb-event/f45c4fe2-fac3-4fec-9159-a7ec2f2cedf7"
               >
                 Mintbean Hackathon 6-29
               </a>
