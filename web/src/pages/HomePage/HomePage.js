@@ -68,6 +68,7 @@ const HomePage = () => {
   const [wbe, setWbe] = useState(false)
   const [dsbe, setDsbe] = useState(false)
   const [dbe, setDbe] = useState(false)
+  const [filter, setFilter] = useState('')
 
   const toggle = (type) => {
     console.log(mbe)
@@ -79,7 +80,7 @@ const HomePage = () => {
       setWmbe(!wmbe)
     } else if (type === 'DBE') {
       setDbe(!dbe)
-    } else {
+    } else if (type === 'DSBE') {
       setDsbe(!dsbe)
     }
   }
@@ -97,36 +98,36 @@ const HomePage = () => {
         <InstantSearch indexName="OEO_registry" searchClient={searchClient}>
           <SearchBox className="m-w-xs bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 px-4 block w-full appearance-none leading-normal" />
           <div className="px-6 py-4">
-            <button
+            <span
               onClick={() => toggle('MBE')}
               className="inline-block bg-teal-500 rounded-full px-3 py-1 text-sm font-semibold text-white mr-2"
             >
               MBE
-            </button>
-            <button
+            </span>
+            <span
               onClick={() => toggle('WMBE')}
               className="inline-block bg-yellow-500 rounded-full px-3 py-1 text-sm font-semibold text-white mr-2"
             >
               WMBE
-            </button>
-            <button
+            </span>
+            <span
               onClick={() => toggle('WBE')}
               className="inline-block bg-red-500 rounded-full px-3 py-1 text-sm font-semibold text-white mr-2"
             >
               WBE
-            </button>
-            <button
+            </span>
+            <span
               onClick={() => toggle('DSBE')}
               className="inline-block bg-purple-500 rounded-full px-3 py-1 text-sm font-semibold text-white mr-2"
             >
               DSBE
-            </button>
-            <button
+            </span>
+            <span
               onClick={() => toggle('DBE')}
               className="inline-block bg-green-500 rounded-full px-3 py-1 text-sm font-semibold text-white"
             >
               DBE
-            </button>
+            </span>
           </div>
           <Hits
             dbe={dbe}
