@@ -12,7 +12,8 @@
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-instantsearch-dom": "^6.6.0"
+    "react-instantsearch-dom": "^6.6.0",
+    "react-instantsearch-dom-maps": "^6.6.0"
   },
   "devDependencies": {
     "@fullhuman/postcss-purgecss": "^2.3.0",
