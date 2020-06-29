@@ -1,4 +1,5 @@
 import BasicLayout from 'src/layouts/BasicLayout'
+import { useState } from 'react'
 import algoliasearch from 'algoliasearch/lite'
 import { InstantSearch, SearchBox, Hits } from 'react-instantsearch-dom'
 import {
@@ -14,58 +15,130 @@ const searchClient = algoliasearch(
 )
 
 const Hit = ({ hit }) => {
-  return (
-    <div className="max-w-sm rounded overflow-hidden shadow-lg">
-      <div className="px-6 py-4">
-        <div className="font-bold text-xl mb-2">{hit.company_name}</div>
-        <p className="text-gray-700 text-base">{hit.physical_address}</p>
-        <p>{hit.capability}</p>
-      </div>
-      <div className="px-6 py-4">
-        <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2">
-          District {hit.certification_type}
-        </span>
-        <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2">
-          Incident Id {hit.complaint_id}
-        </span>
-        <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700">
-          {hit.date_received}
-        </span>
-      </div>
-    </div>
-  )
-}
+  const color = (type) => {
+    if (type === 'MBE') {
+      return 'bg-teal-500'
+    } else if (type === 'WBE') {
+      return 'bg-red-500'
+    } else if (type === 'MWBE') {
+      return 'bg-yellow-500'
+    } else if (type === 'DBE') {
+      return 'bg-green-500'
+    } else {
+      return 'bg-purple-500'
+    }
+  }
 
-const Map = () => {
   return (
-    <div style={{ height: 500 }}>
-      <GoogleMapsLoader apiKey="AIzaSyD15AGnGsTDlU8CZoLYB4oBSQL1g5tdEDM">
-        {(google) => (
-          <GeoSearch google={google}>
-            {({ hits }) => (
-              <div>
-                <Control />
-                {hits.map((hit) => (
-                  <Marker key={hit.objectID} hit={hit} />
-                ))}
-              </div>
-            )}
-          </GeoSearch>
-        )}
-      </GoogleMapsLoader>
+    <div
+      className={`max-w-sm rounded ${color(
+        hit.certification_type
+      )} mb-3 overflow-hidden shadow-lg mx-auto`}
+    >
+      <div className="px-6 py-4">
+        <div className="font-bold text-white text-xl mb-2">
+          {hit.company_name}
+        </div>
+        <p className="text-gray-100 text-base">
+          {hit.owner_first} {hit.owner_last}
+        </p>
+        <h2>{hit.physical_address}</h2>
+        <p className="text-white" f>
+          {hit.capability}
+        </p>
+      </div>
+      <div className="px-6 py-4">
+        <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2">
+          {hit.certification_type}
+        </span>
+        <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2">
+          {hit.phone}
+        </span>
+        <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm mt-2 font-semibold text-gray-700">
+          {hit.email}
+        </span>
+      </div>
     </div>
   )
 }
 
 const HomePage = () => {
+  const [mbe, setMbe] = useState(false)
+  const [wmbe, setWmbe] = useState(false)
+  const [wbe, setWbe] = useState(false)
+  const [dsbe, setDsbe] = useState(false)
+  const [dbe, setDbe] = useState(false)
+
+  const toggle = (type) => {
+    console.log(mbe)
+    if (type === 'MBE') {
+      setMbe(!mbe)
+    } else if (type === 'WBE') {
+      setWmbe(!wmbe)
+    } else if (type === 'MWBE') {
+      setWmbe(!wmbe)
+    } else if (type === 'DBE') {
+      setDbe(!dbe)
+    } else {
+      setDsbe(!dsbe)
+    }
+  }
+
   return (
     <BasicLayout>
-      Mintbean 6-29
-      <InstantSearch indexName="OEO_registry" searchClient={searchClient}>
-        <SearchBox />
-        <Hits hitComponent={Hit} />
-        <Map />
-      </InstantSearch>
+      <div className="m-w-sm shadow-lg text-center p-5 mx-auto">
+        <h2 className="text-5xl">Philadelphia OEO Database</h2>
+        <p className="text-sm">
+          Search Certified Minority, Women, Disabled and Disadvantages Business
+          Enterprises around Philadelphia
+        </p>
+      </div>
+      <div className="justify-center text-center mt-3">
+        <InstantSearch indexName="OEO_registry" searchClient={searchClient}>
+          <SearchBox className="m-w-xs bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 px-4 block w-full appearance-none leading-normal" />
+          <div className="px-6 py-4">
+            <button
+              onClick={() => toggle('MBE')}
+              className="inline-block bg-teal-500 rounded-full px-3 py-1 text-sm font-semibold text-white mr-2"
+            >
+              MBE
+            </button>
+            <button
+              onClick={() => toggle('WMBE')}
+              className="inline-block bg-yellow-500 rounded-full px-3 py-1 text-sm font-semibold text-white mr-2"
+            >
+              WMBE
+            </button>
+            <button
+              onClick={() => toggle('WBE')}
+              className="inline-block bg-red-500 rounded-full px-3 py-1 text-sm font-semibold text-white mr-2"
+            >
+              WBE
+            </button>
+            <button
+              onClick={() => toggle('DSBE')}
+              className="inline-block bg-purple-500 rounded-full px-3 py-1 text-sm font-semibold text-white mr-2"
+            >
+              DSBE
+            </button>
+            <button
+              onClick={() => toggle('DBE')}
+              className="inline-block bg-green-500 rounded-full px-3 py-1 text-sm font-semibold text-white"
+            >
+              DBE
+            </button>
+          </div>
+          <Hits
+            dbe={dbe}
+            dsbe={dsbe}
+            wbe={wbe}
+            mwbe={wmbe}
+            mbe={mbe}
+            className="text-center"
+            hitComponent={Hit}
+          />
+        </InstantSearch>
+      </div>
     </BasicLayout>
   )
 }
