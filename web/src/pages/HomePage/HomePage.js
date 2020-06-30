@@ -1,18 +1,94 @@
 import BasicLayout from 'src/layouts/BasicLayout'
 import { useState } from 'react'
 import algoliasearch from 'algoliasearch/lite'
-import { InstantSearch, SearchBox, Hits } from 'react-instantsearch-dom'
 import {
-  GoogleMapsLoader,
-  GeoSearch,
-  Control,
-  Marker,
-} from 'react-instantsearch-dom-maps'
+  InstantSearch,
+  SearchBox,
+  Hits,
+  connectRefinementList,
+} from 'react-instantsearch-dom'
 
 const searchClient = algoliasearch(
   'EJBZYI8WQ0',
   'ad2529b88fd3b0de6b212fb578b47352'
 )
+
+const RefinementList = ({ items, isFromSearch, refine, createURL }) => {
+  const bgColor = (type) => {
+    if (type === 'MBE') {
+      return 'bg-teal-500'
+    } else if (type === 'WBE') {
+      return 'bg-red-500'
+    } else if (type === 'MWBE') {
+      return 'bg-yellow-500'
+    } else if (type === 'DBE') {
+      return 'bg-green-500'
+    } else {
+      return 'bg-purple-500'
+    }
+  }
+
+  const textColor = (type) => {
+    if (type === 'MBE') {
+      return 'text-teal-500'
+    } else if (type === 'WBE') {
+      return 'text-red-500'
+    } else if (type === 'MWBE') {
+      return 'text-yellow-500'
+    } else if (type === 'DBE') {
+      return 'text-green-500'
+    } else {
+      return 'text-purple-500'
+    }
+  }
+
+  const styleColor = (type, target) => {
+    if (type === 'MBE') {
+      return `${target}-teal-500`
+    } else if (type === 'WBE') {
+      return `${target}-red-500`
+    } else if (type === 'MWBE') {
+      return `${target}-yellow-500`
+    } else if (type === 'DBE') {
+      return `${target}-green-500`
+    } else {
+      return `${target}-purple-500`
+    }
+  }
+
+  return (
+    <div>
+      {items.map((item) => (
+        <span key={item.label}>
+          <a
+            className={`inline-block ${
+              item.isRefined
+                ? `${bgColor(item.label)} text-white`
+                : `bg-white ${textColor(item.label)}`
+            } rounded-full px-3 py-1 text-sm border ${styleColor(
+              item.label,
+              'border'
+            )} font-semibold mr-2`}
+            href={createURL(item.value)}
+            onClick={(event) => {
+              event.preventDefault()
+              refine(item.value)
+            }}
+          >
+            {isFromSearch ? (
+              <Highlight attribute="label" hit={item} />
+            ) : (
+              item.label
+            )}{' '}
+            ({item.count})
+          </a>
+        </span>
+      ))}
+    </div>
+  )
+}
+
+const CustomRefinementList = connectRefinementList(RefinementList)
 
 const Hit = ({ hit }) => {
   const color = (type) => {
@@ -98,36 +174,7 @@ const HomePage = () => {
         <InstantSearch indexName="OEO_registry" searchClient={searchClient}>
           <SearchBox className="m-w-xs bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 px-4 block w-full appearance-none leading-normal" />
           <div className="px-6 py-4">
-            <span
-              onClick={() => toggle('MBE')}
-              className="inline-block bg-teal-500 rounded-full px-3 py-1 text-sm font-semibold text-white mr-2"
-            >
-              MBE
-            </span>
-            <span
-              onClick={() => toggle('WMBE')}
-              className="inline-block bg-yellow-500 rounded-full px-3 py-1 text-sm font-semibold text-white mr-2"
-            >
-              WMBE
-            </span>
-            <span
-              onClick={() => toggle('WBE')}
-              className="inline-block bg-red-500 rounded-full px-3 py-1 text-sm font-semibold text-white mr-2"
-            >
-              WBE
-            </span>
-            <span
-              onClick={() => toggle('DSBE')}
-              className="inline-block bg-purple-500 rounded-full px-3 py-1 text-sm font-semibold text-white mr-2"
-            >
-              DSBE
-            </span>
-            <span
-              onClick={() => toggle('DBE')}
-              className="inline-block bg-green-500 rounded-full px-3 py-1 text-sm font-semibold text-white"
-            >
-              DBE
-            </span>
+            <CustomRefinementList attribute="certification_type" />
           </div>
           <Hits
             dbe={dbe}
